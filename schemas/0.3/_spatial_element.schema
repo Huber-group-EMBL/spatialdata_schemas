@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "_spatial_element.schema",
+  "title": "SpatialData spatial element attributes (base)",
+  "description": "Shared attributes for non-raster SpatialData spatial elements (shapes, points). Not intended to be used directly.",
+  "type": "object",
+  "properties": {
+    "axes": {
+      "description": "Ordered list of spatial axis names for this element",
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 2,
+      "maxItems": 3,
+      "uniqueItems": true
+    },
+    "coordinateTransformations": {
+      "description": "Transformations from the element coordinate system to one or more target coordinate systems",
+      "$ref": "coordinate_transformations_ome-v0.6.schema"
+    },
+    "spatialdata_attrs": {
+      "type": "object",
+      "properties": {
+        "version": { "type": "string" }
+      },
+      "required": ["version"]
+    }
+  },
+  "required": ["axes", "coordinateTransformations"]
+}
