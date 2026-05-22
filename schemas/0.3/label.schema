@@ -40,17 +40,11 @@
             "required": ["datasets", "axes"]
           }
         },
-        "version": { "$ref": "_version.schema" }
+        "version": { "$ref": "ome_version.schema" }
       },
       "required": ["multiscales", "version"]
     },
-    "spatialdata_attrs": {
-      "type": "object",
-      "properties": {
-        "version": { "type": "string" }
-      },
-      "required": ["version"]
-    }
+    "spatialdata_attrs": { "$ref": "sd_version.schema" }
   },
   "required": ["ome"],
   "$defs": {

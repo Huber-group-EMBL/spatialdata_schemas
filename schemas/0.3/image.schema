@@ -16,13 +16,16 @@
           "$ref": "#/$defs/omero"
         },
         "version": {
-          "$ref": "_version.schema"
+          "$ref": "ome_version.schema"
         }
       },
       "required": [
         "multiscales",
         "version"
       ]
+    },
+    "spatialdata_attrs": {
+      "$ref": "sd_version.schema"
     }
   },
   "required": [

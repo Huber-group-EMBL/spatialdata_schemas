@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sd_version.schema",
+  "title": "SpatialData element version",
+  "description": "The version of the SpatialData element specification",
+  "type": "string",
+  "const": "0.3"
+}
