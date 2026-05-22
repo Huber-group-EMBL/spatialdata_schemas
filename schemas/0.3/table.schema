@@ -44,9 +44,16 @@
   "required": [
     "encoding-type",
     "encoding-version",
-    "spatialdata-encoding-type",
-    "region",
-    "region_key",
-    "instance_key"
-  ]
+    "spatialdata-encoding-type"
+  ],
+  "if": {
+    "anyOf": [
+      { "required": ["region"] },
+      { "required": ["region_key"] },
+      { "required": ["instance_key"] }
+    ]
+  },
+  "then": {
+    "required": ["region", "region_key", "instance_key"]
+  }
 }
