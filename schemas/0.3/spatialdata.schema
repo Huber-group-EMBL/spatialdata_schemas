@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "spatialdata.schema",
+  "title": "SpatialData consolidated metadata",
+  "description": "Root zarr.json (consolidated Zarr v3 metadata) for a SpatialData v0.3 store",
+  "type": "object",
+  "properties": {
+    "zarr_format": {
+      "type": "integer",
+      "const": 3
+    },
+    "node_type": {
+      "type": "string",
+      "const": "group"
+    },
+    "attributes": {
+      "type": "object",
+      "properties": {
+        "spatialdata_attrs": {
+          "type": "object",
+          "properties": {
+            "version": { "type": "string" },
+            "spatialdata_software_version": { "type": "string" }
+          },
+          "required": ["version"]
+        }
+      },
+      "required": ["spatialdata_attrs"]
+    },
+    "consolidated_metadata": {
+      "type": "object",
+      "properties": {
+        "kind": { "type": "string", "const": "inline" },
+        "must_understand": { "type": "boolean" },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "images": { "$ref": "#/$defs/topLevelGroup" },
+            "labels": { "$ref": "#/$defs/topLevelGroup" },
+            "points": { "$ref": "#/$defs/topLevelGroup" },
+            "shapes": { "$ref": "#/$defs/topLevelGroup" },
+            "tables": { "$ref": "#/$defs/topLevelGroup" }
+          },
+          "patternProperties": {
+            "^images/[^/]+$": { "$ref": "#/$defs/imageNode" },
+            "^labels/[^/]+$": { "$ref": "#/$defs/labelNode" },
+            "^points/[^/]+$": { "$ref": "#/$defs/pointsNode" },
+            "^shapes/[^/]+$": { "$ref": "#/$defs/shapesNode" },
+            "^tables/[^/]+$": { "$ref": "#/$defs/tableNode" },
+            "^(images|labels)/[^/]+/[^/]+$": { "$ref": "#/$defs/arrayNode" },
+            "^tables/[^/]+/.+$": { "$ref": "#/$defs/zarrNode" }
+          }
+        }
+      },
+      "required": ["kind", "metadata"]
+    }
+  },
+  "required": ["zarr_format", "node_type", "attributes", "consolidated_metadata"],
+  "$defs": {
+    "zarrGroupNode": {
+      "description": "A Zarr v3 group node",
+      "type": "object",
+      "properties": {
+        "zarr_format": { "type": "integer", "const": 3 },
+        "node_type": { "type": "string", "const": "group" },
+        "attributes": { "type": "object" },
+        "consolidated_metadata": { "type": "object" }
+      },
+      "required": ["zarr_format", "node_type"]
+    },
+    "topLevelGroup": {
+      "description": "A top-level category group (images/, labels/, etc.)",
+      "$ref": "#/$defs/zarrGroupNode"
+    },
+    "imageNode": {
+      "description": "An images/{name} group node containing OME-Zarr multiscale image metadata",
+      "allOf": [
+        { "$ref": "#/$defs/zarrGroupNode" },
+        {
+          "properties": { "attributes": { "$ref": "image.schema" } },
+          "required": ["attributes"]
+        }
+      ]
+    },
+    "labelNode": {
+      "description": "A labels/{name} group node containing OME-Zarr multiscale label metadata",
+      "allOf": [
+        { "$ref": "#/$defs/zarrGroupNode" },
+        {
+          "properties": { "attributes": { "$ref": "label.schema" } },
+          "required": ["attributes"]
+        }
+      ]
+    },
+    "pointsNode": {
+      "description": "A points/{name} group node containing SpatialData points metadata",
+      "allOf": [
+        { "$ref": "#/$defs/zarrGroupNode" },
+        {
+          "properties": { "attributes": { "$ref": "points.schema" } },
+          "required": ["attributes"]
+        }
+      ]
+    },
+    "shapesNode": {
+      "description": "A shapes/{name} group node containing SpatialData shapes metadata",
+      "allOf": [
+        { "$ref": "#/$defs/zarrGroupNode" },
+        {
+          "properties": { "attributes": { "$ref": "shape.schema" } },
+          "required": ["attributes"]
+        }
+      ]
+    },
+    "tableNode": {
+      "description": "A tables/{name} group node containing SpatialData table metadata",
+      "allOf": [
+        { "$ref": "#/$defs/zarrGroupNode" },
+        {
+          "properties": { "attributes": { "$ref": "table.schema" } },
+          "required": ["attributes"]
+        }
+      ]
+    },
+    "arrayNode": { "$ref": "zarr.schema" },
+    "zarrNode": {
+      "description": "Any Zarr v3 node — either a group or an array",
+      "type": "object",
+      "oneOf": [
+        { "$ref": "#/$defs/zarrGroupNode" },
+        { "$ref": "zarr.schema" }
+      ]
+    }
+  }
+}

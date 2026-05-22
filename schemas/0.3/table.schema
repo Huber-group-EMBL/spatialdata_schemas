@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "table.schema",
+  "title": "SpatialData regions table attributes",
+  "description": "The zarr.json attributes key for a tables/{name} group in a SpatialData v0.3 store",
+  "type": "object",
+  "properties": {
+    "encoding-type": {
+      "type": "string",
+      "const": "anndata"
+    },
+    "encoding-version": {
+      "description": "The AnnData on-disk format version",
+      "type": "string"
+    },
+    "spatialdata-encoding-type": {
+      "type": "string",
+      "const": "ngff:regions_table"
+    },
+    "version": {
+      "description": "The SpatialData regions table spec version",
+      "type": "string"
+    },
+    "region": {
+      "description": "Name(s) of the region element(s) this table annotates",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        }
+      ]
+    },
+    "region_key": {
+      "description": "Column name in obs that identifies the region for each row",
+      "type": "string"
+    },
+    "instance_key": {
+      "description": "Column name in obs that identifies the instance within the region for each row",
+      "type": "string"
+    }
+  },
+  "required": [
+    "encoding-type",
+    "encoding-version",
+    "spatialdata-encoding-type",
+    "region",
+    "region_key",
+    "instance_key"
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "zarr.schema",
+  "title": "Zarr v3 Array",
+  "description": "zarr.json metadata for a Zarr v3 array node (e.g. a scale level within an image or label)",
+  "type": "object",
+  "properties": {
+    "zarr_format": {
+      "type": "integer",
+      "const": 3
+    },
+    "node_type": {
+      "type": "string",
+      "const": "array"
+    },
+    "shape": {
+      "description": "The shape of the array along each dimension (empty array for 0-dimensional scalars)",
+      "type": "array",
+      "items": { "type": "integer", "minimum": 1 },
+      "minItems": 0
+    },
+    "data_type": {
+      "description": "The data type of the array elements",
+      "type": "string"
+    },
+    "chunk_grid": {
+      "description": "Specifies how the array is divided into chunks",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The chunk grid type, e.g. 'regular'"
+        },
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "chunk_shape": {
+              "type": "array",
+              "items": { "type": "integer", "minimum": 1 },
+              "minItems": 0
+            }
+          }
+        }
+      },
+      "required": ["name"]
+    },
+    "chunk_key_encoding": {
+      "description": "Specifies how chunk keys are encoded",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "configuration": { "type": "object" }
+      },
+      "required": ["name"]
+    },
+    "fill_value": {
+      "description": "The fill value for unwritten chunks"
+    },
+    "codecs": {
+      "description": "Ordered list of codecs applied when reading/writing chunks",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "configuration": { "type": "object" }
+        },
+        "required": ["name"]
+      }
+    },
+    "dimension_names": {
+      "description": "Optional names for each array dimension",
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "attributes": {
+      "description": "User-defined attributes",
+      "type": "object"
+    },
+    "storage_transformers": {
+      "description": "Optional list of storage transformers",
+      "type": "array"
+    }
+  },
+  "required": ["zarr_format", "node_type", "shape", "data_type", "chunk_grid", "codecs"]
+}

@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "label.schema",
+  "title": "OME-Zarr Label Image",
+  "description": "The zarr.json attributes key for a labels/{name} group in a SpatialData v0.3 store",
+  "type": "object",
+  "properties": {
+    "ome": {
+      "description": "The versioned OME-Zarr Metadata namespace",
+      "type": "object",
+      "properties": {
+        "multiscales": {
+          "description": "The multiscale datasets for this label image",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "datasets": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "path": { "type": "string" },
+                    "coordinateTransformations": {
+                      "$ref": "#/$defs/coordinateTransformations"
+                    }
+                  },
+                  "required": ["path", "coordinateTransformations"]
+                }
+              },
+              "axes": { "$ref": "#/$defs/axes" },
+              "coordinateTransformations": {
+                "$ref": "coordinate_transformations_ome-v0.6.schema"
+              }
+            },
+            "required": ["datasets", "axes"]
+          }
+        },
+        "version": { "$ref": "_version.schema" }
+      },
+      "required": ["multiscales", "version"]
+    },
+    "spatialdata_attrs": {
+      "type": "object",
+      "properties": {
+        "version": { "type": "string" }
+      },
+      "required": ["version"]
+    }
+  },
+  "required": ["ome"],
+  "$defs": {
+    "axes": {
+      "description": "Spatial axes for a label image (no channel axis)",
+      "type": "array",
+      "uniqueItems": true,
+      "minItems": 2,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["space", "time"]
+          },
+          "unit": { "type": "string" }
+        },
+        "required": ["name", "type"]
+      }
+    },
+    "coordinateTransformations": {
+      "description": "Per-dataset coordinate transformations (scale, translation)",
+      "type": "array",
+      "minItems": 1,
+      "contains": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string", "const": "scale" }
+        }
+      },
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string", "const": "scale" },
+              "scale": {
+                "type": "array",
+                "minItems": 2,
+                "items": { "type": "number" }
+              }
+            },
+            "required": ["type", "scale"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string", "const": "translation" },
+              "translation": {
+                "type": "array",
+                "minItems": 2,
+                "items": { "type": "number" }
+              }
+            },
+            "required": ["type", "translation"]
+          }
+        ]
+      }
+    }
+  }
+}

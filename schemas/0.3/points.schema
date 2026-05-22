@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "points.schema",
+  "title": "SpatialData points element attributes",
+  "description": "The zarr.json attributes key for a points/{name} group in a SpatialData v0.3 store",
+  "type": "object",
+  "properties": {
+    "encoding-type": {
+      "type": "string",
+      "const": "ngff:points"
+    },
+    "axes": {
+      "description": "Ordered list of spatial axis names for this points element",
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 2,
+      "maxItems": 3,
+      "uniqueItems": true
+    },
+    "coordinateTransformations": {
+      "description": "Transformations from the element coordinate system to one or more target coordinate systems",
+      "$ref": "coordinate_transformations_ome-v0.6.schema"
+    },
+    "spatialdata_attrs": {
+      "type": "object",
+      "properties": {
+        "version": { "type": "string" }
+      },
+      "required": ["version"]
+    }
+  },
+  "required": ["encoding-type", "axes", "coordinateTransformations"]
+}
